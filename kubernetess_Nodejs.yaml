@@ -1,44 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: venudemonodejs
+  name: nodejsdeployment
+  labels:
+    app: nodejsdeployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: venudemonodejs
+      app: nodejsdeployment
   template:
     metadata:
       labels:
-        app: venudemonodejs
-       
+        app: nodejsdeployment
     spec:
       containers:
-      - name: venudemonodejs
-        image: mykubernetesregistryvenu.azurecr.io/project-2:v1
-        ports:
-        - name: web
-          containerPort: 80
-        resources:
-          limits:
-            cpu: "250m"
-            memory: "256Mi"
-          requests:
-            cpu: "50m"
-            memory: "128Mi"
-      imagePullSecrets:
-      - name: acr-secret
+        - name: nodejsdeployment
+          image: myshivaakscluter.azurecr.io/mynodejsappdevops
+          ports:
+            - containerPort: 80
 ---
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
-  name: venudemonodejs
+  name: nodejsdeployment-loadbalancer-service
   labels:
-    app: venudemonodejs
+    app: nodejsdeployment
 spec:
+  type: LoadBalancer
   selector:
-    app: venudemonodejs
-  type: LoadBalancer    
+    app: nodejsdeployment
   ports:
-  - name: web
-    port: 80
+    - port: 80
+      targetPort: 80
